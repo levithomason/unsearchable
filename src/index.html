@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Unsearchable</title>
+    <link
+      href="https://pagecdn.io/lib/normalize/8.0.1/normalize.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="logo">
+      <h1>Unsearchable</h1>
+      <div>Exposing the Google™ social programming agenda.</div>
+    </div>
+    <div class="search">
+      <input type="text" autofocus />
+      <span class="icon">☌</span>
+    </div>
+    <div class="mode">
+      <label>
+        <input name="mode" type="radio" value="search" checked /> All
+      </label>
+      <label> <input name="mode" type="radio" value="images" /> Images </label>
+    </div>
+    <div class="links">
+      <strong>Try one of these:</strong>
+      <a class="link" data-mode="all"
+        >Kids are being taught they are white supremacists</a
+      >
+      <a class="link" data-mode="images">Happy White Woman</a>
+      <a class="link" data-mode="images">Happy Asian Woman</a>
+      <a class="link" data-mode="images">Happy Black Woman</a>
+      <a class="link" data-mode="all">Hunter Biden laptop</a>
+      <a class="link" data-mode="images">American culture</a>
+      <a class="link" data-mode="all">Trump Russia Investigation</a>
+    </div>
+    <div class="results">
+      <div class="result">
+        <h2>Google</h2>
+        <img id="googleResult" />
+      </div>
+      <div class="result">
+        <h2>Duck Duck Go</h2>
+        <img id="duckduckgoResult" />
+      </div>
+      <div class="result">
+        <h2>Yahoo</h2>
+        <img id="yahooResult" />
+      </div>
+      <div class="result">
+        <h2>Bing</h2>
+        <img id="bingResult" />
+      </div>
+    </div>
+    <script>
+      let mode = "all";
+
+      const search = (query, searchMode = mode) => {
+        const q = encodeURIComponent(query);
+        window.googleResult.src = `http://localhost:3000/google/${searchMode}?q=${q}`;
+        window.duckduckgoResult.src = `http://localhost:3000/duckduckgo/${searchMode}?q=${q}`;
+        window.bingResult.src = `http://localhost:3000/bing/${searchMode}?q=${q}`;
+        window.yahooResult.src = `http://localhost:3000/yahoo/${searchMode}?q=${q}`;
+      };
+
+      const $input = document.querySelector(".search input");
+      const $links = document.querySelectorAll(".link");
+      const $modes = document.querySelectorAll(
+        'input[type="radio"][name="mode"]'
+      );
+
+      $input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          search(e.target.value);
+        }
+      });
+
+      $modes.forEach(($mode) => {
+        $mode.addEventListener("click", (e) => {
+          mode = e.target.value;
+        });
+      });
+
+      $links.forEach(($link) => {
+        $link.addEventListener("click", (e) => {
+          const query = e.target.textContent;
+          const mode = e.target.dataset.mode;
+          $input.value = query;
+          search(query, mode);
+        });
+      });
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: sans-serif;
+        padding: 2vw;
+        text-align: center;
+      }
+      img {
+        width: 100%;
+      }
+      .logo {
+        text-align: center;
+        margin-bottom: 1.25em;
+      }
+      .logo h1 {
+        display: inline-block;
+        margin-bottom: 0;
+      }
+      .logo h1::after {
+        content: "";
+        width: 6ch;
+        height: 1.5ch;
+        background: #000000cc;
+        transform: rotate(-5deg);
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 0.1em auto 0 auto;
+      }
+      .mode {
+        margin: 1em 0 2em;
+      }
+      .links {
+        position: absolute;
+        top: 20px;
+        right: 38px;
+        display: flex;
+        flex-direction: column;
+      }
+      .link {
+        color: cornflowerblue;
+        margin: 0.25em auto;
+      }
+      .link:hover {
+        color: royalblue;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      .search {
+        display: flex;
+        margin: auto;
+        width: 800px;
+        font-size: 21px;
+      }
+      .search .icon {
+        position: absolute;
+        transform: rotate(-180deg);
+        padding: 0.325em 0.75em;
+        font-size: 28px;
+        opacity: 0.5;
+      }
+      .search input {
+        flex: 1;
+        padding: 0.5em 0 0.5em 2.25em;
+        margin: 0;
+        border: 2px solid #888;
+        border-radius: 999px;
+        background: none;
+      }
+      .search input:focus {
+        border-color: #e55;
+        outline: none;
+      }
+      .results {
+        display: flex;
+        justify-content: space-around;
+        margin: 1em auto;
+      }
+      .results .result {
+        flex: 1;
+      }
+      .results img {
+        width: 100%;
+        border: 2px solid black;
+      }
+    </style>
+    <script src="https://unpkg.com/axios@0.20.0-0/dist/axios.min.js"></script>
+  </body>
+</html>
